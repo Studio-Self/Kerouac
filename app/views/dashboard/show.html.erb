@@ -2,73 +2,65 @@
 
 <div class="space-y-8">
   <!-- Header -->
-  <div class="md:flex md:items-center md:justify-between">
-    <div class="min-w-0 flex-1">
-      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-        Writing Activity
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-bold text-terminal-bright uppercase tracking-wider">
+        &gt; Writing Activity_
       </h1>
+      <p class="mt-1 text-sm text-terminal-dim">// Track your publishing streak</p>
     </div>
-    <div class="mt-4 flex md:ml-4 md:mt-0">
-      <%= link_to new_connection_path, class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" do %>
-        <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-        </svg>
-        Add Connection
+    <div>
+      <%= link_to new_connection_path, class: "btn-primary" do %>
+        + ADD CONNECTION
       <% end %>
     </div>
   </div>
 
   <!-- Stats Grid -->
-  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
     <!-- Current Streak -->
-    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-      <dt class="truncate text-sm font-medium text-gray-500">Current Streak</dt>
-      <dd class="mt-1 flex items-baseline">
-        <span class="text-3xl font-semibold tracking-tight text-indigo-600"><%= @current_streak %></span>
-        <span class="ml-2 text-sm text-gray-500">days</span>
+    <div class="stat-card">
+      <dt class="stat-label">Current Streak</dt>
+      <dd class="flex items-baseline">
+        <span class="stat-value stat-value-highlight animate-pulse-glow"><%= @current_streak %></span>
+        <span class="ml-2 text-sm text-terminal-dim">days</span>
       </dd>
     </div>
 
     <!-- Total Posts -->
-    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-      <dt class="truncate text-sm font-medium text-gray-500">Total Posts</dt>
-      <dd class="mt-1 flex items-baseline">
-        <span class="text-3xl font-semibold tracking-tight text-gray-900"><%= @total_posts %></span>
-      </dd>
+    <div class="stat-card">
+      <dt class="stat-label">Total Posts</dt>
+      <dd class="stat-value"><%= @total_posts %></dd>
     </div>
 
     <!-- This Week -->
-    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-      <dt class="truncate text-sm font-medium text-gray-500">Posts This Week</dt>
-      <dd class="mt-1 flex items-baseline">
-        <span class="text-3xl font-semibold tracking-tight text-gray-900"><%= @posts_this_week %></span>
-      </dd>
+    <div class="stat-card">
+      <dt class="stat-label">Posts This Week</dt>
+      <dd class="stat-value"><%= @posts_this_week %></dd>
     </div>
 
     <!-- Total Words -->
-    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-      <dt class="truncate text-sm font-medium text-gray-500">Total Words</dt>
-      <dd class="mt-1 flex items-baseline">
-        <span class="text-3xl font-semibold tracking-tight text-gray-900"><%= number_with_delimiter(@total_word_count) %></span>
-      </dd>
+    <div class="stat-card">
+      <dt class="stat-label">Total Words</dt>
+      <dd class="stat-value"><%= number_with_delimiter(@total_word_count) %></dd>
     </div>
   </div>
 
   <!-- Activity Graph -->
-  <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Activity Graph</h2>
-    <div data-controller="activity-graph" data-activity-graph-data-value="<%= @activity_data.to_json %>">
-      <div class="overflow-x-auto">
+  <div class="card">
+    <div class="card-header">Activity Graph</div>
+    <div class="card-body" data-controller="activity-graph" data-activity-graph-data-value="<%= @activity_data.to_json %>">
+      <div class="overflow-x-auto pb-2">
         <div data-activity-graph-target="graph" class="activity-graph"></div>
       </div>
-      <div class="mt-4 flex items-center justify-end text-sm text-gray-500">
+      <div class="mt-4 flex items-center justify-end text-xs text-terminal-dim">
         <span class="mr-2">Less</span>
         <div class="flex space-x-1">
-          <div class="w-3 h-3 rounded-sm bg-gray-100"></div>
-          <div class="w-3 h-3 rounded-sm bg-green-200"></div>
-          <div class="w-3 h-3 rounded-sm bg-green-400"></div>
-          <div class="w-3 h-3 rounded-sm bg-green-600"></div>
-          <div class="w-3 h-3 rounded-sm bg-green-800"></div>
+          <div class="w-3 h-3 activity-level-0"></div>
+          <div class="w-3 h-3 activity-level-1"></div>
+          <div class="w-3 h-3 activity-level-2"></div>
+          <div class="w-3 h-3 activity-level-3"></div>
+          <div class="w-3 h-3 activity-level-4"></div>
         </div>
         <span class="ml-2">More</span>
       </div>
@@ -78,96 +70,88 @@
   <!-- Two Column Layout -->
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     <!-- Recent Posts -->
-    <div class="bg-white shadow rounded-lg">
-      <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-        <h2 class="text-lg font-medium text-gray-900">Recent Posts</h2>
-      </div>
-      <ul role="list" class="divide-y divide-gray-200">
+    <div class="card">
+      <div class="card-header">Recent Posts</div>
+      <div class="card-body p-0">
         <% if @recent_posts.any? %>
-          <% @recent_posts.each do |post| %>
-            <li class="px-4 py-4 sm:px-6">
-              <div class="flex items-center justify-between">
-                <div class="min-w-0 flex-1">
-                  <p class="truncate text-sm font-medium text-gray-900">
-                    <% if post.url.present? %>
-                      <%= link_to post.title, post.url, target: "_blank", class: "hover:text-indigo-600" %>
-                    <% else %>
-                      <%= post.title %>
-                    <% end %>
-                  </p>
-                  <div class="mt-1 flex items-center text-sm text-gray-500">
-                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= platform_badge_class(post.platform) %>">
-                      <%= post.platform.titleize %>
-                    </span>
-                    <span class="ml-2"><%= post.published_at.strftime("%b %d, %Y") %></span>
-                    <% if post.word_count.to_i > 0 %>
-                      <span class="ml-2"><%= number_with_delimiter(post.word_count) %> words</span>
-                    <% end %>
+          <ul class="ascii-list">
+            <% @recent_posts.each do |post| %>
+              <li class="ascii-list-item">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-sm text-terminal truncate">
+                      <% if post.url.present? %>
+                        <%= link_to post.title, post.url, target: "_blank", class: "hover:text-terminal-bright" %>
+                      <% else %>
+                        <%= post.title %>
+                      <% end %>
+                    </p>
+                    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-terminal-dim">
+                      <span class="badge badge-<%= post.platform %>"><%= post.platform.upcase %></span>
+                      <span><%= post.published_at.strftime("%Y-%m-%d") %></span>
+                      <% if post.word_count.to_i > 0 %>
+                        <span><%= number_with_delimiter(post.word_count) %> words</span>
+                      <% end %>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          <% end %>
+              </li>
+            <% end %>
+          </ul>
         <% else %>
-          <li class="px-4 py-12 text-center">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No posts yet</h3>
-            <p class="mt-1 text-sm text-gray-500">Connect a platform to start tracking your writing.</p>
+          <div class="empty-state">
+            <div class="text-4xl text-terminal-dim mb-4">[ ]</div>
+            <h3 class="empty-state-title">No posts yet</h3>
+            <p class="empty-state-description">Connect a platform to start tracking your writing.</p>
             <div class="mt-6">
-              <%= link_to new_connection_path, class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" do %>
-                Add Connection
+              <%= link_to new_connection_path, class: "btn-primary" do %>
+                + ADD CONNECTION
               <% end %>
             </div>
-          </li>
+          </div>
         <% end %>
-      </ul>
+      </div>
     </div>
 
     <!-- Connections -->
-    <div class="bg-white shadow rounded-lg">
-      <div class="px-4 py-5 sm:px-6 border-b border-gray-200 flex items-center justify-between">
-        <h2 class="text-lg font-medium text-gray-900">Connected Platforms</h2>
-        <%= link_to connections_path, class: "text-sm text-indigo-600 hover:text-indigo-500" do %>
-          View all
-        <% end %>
+    <div class="card">
+      <div class="card-header flex items-center justify-between">
+        <span>Connected Platforms</span>
+        <%= link_to "VIEW ALL >>", connections_path, class: "text-xs text-terminal-dim hover:text-terminal" %>
       </div>
-      <ul role="list" class="divide-y divide-gray-200">
+      <div class="card-body p-0">
         <% if @connections.any? %>
-          <% @connections.each do |connection| %>
-            <li class="px-4 py-4 sm:px-6">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center min-w-0">
-                  <div class="flex-shrink-0">
+          <ul class="ascii-list">
+            <% @connections.each do |connection| %>
+              <li class="ascii-list-item">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center min-w-0 gap-3">
                     <%= render "connections/platform_icon", platform: connection.platform %>
+                    <div class="min-w-0">
+                      <p class="text-sm text-terminal truncate"><%= connection.name %></p>
+                      <p class="text-xs text-terminal-dim"><%= connection.posts_count %> posts</p>
+                    </div>
                   </div>
-                  <div class="ml-4 min-w-0">
-                    <p class="truncate text-sm font-medium text-gray-900"><%= connection.name %></p>
-                    <p class="text-sm text-gray-500"><%= connection.posts_count %> posts</p>
+                  <div>
+                    <%= render "connections/status_badge", connection: connection %>
                   </div>
                 </div>
-                <div class="flex items-center">
-                  <%= render "connections/status_badge", connection: connection %>
-                </div>
-              </div>
-            </li>
-          <% end %>
+              </li>
+            <% end %>
+          </ul>
         <% else %>
-          <li class="px-4 py-12 text-center">
-            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-            </svg>
-            <h3 class="mt-2 text-sm font-medium text-gray-900">No connections</h3>
-            <p class="mt-1 text-sm text-gray-500">Get started by connecting a writing platform.</p>
+          <div class="empty-state">
+            <div class="text-4xl text-terminal-dim mb-4">&lt;/&gt;</div>
+            <h3 class="empty-state-title">No connections</h3>
+            <p class="empty-state-description">Get started by connecting a writing platform.</p>
             <div class="mt-6">
-              <%= link_to new_connection_path, class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" do %>
-                Add Connection
+              <%= link_to new_connection_path, class: "btn-primary" do %>
+                + ADD CONNECTION
               <% end %>
             </div>
-          </li>
+          </div>
         <% end %>
-      </ul>
+      </div>
     </div>
   </div>
 </div>

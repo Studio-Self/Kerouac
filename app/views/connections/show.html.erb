@@ -2,93 +2,75 @@
 
 <div class="space-y-6">
   <!-- Header -->
-  <div class="md:flex md:items-center md:justify-between">
-    <div class="min-w-0 flex-1">
-      <div class="flex items-center">
-        <%= render "connections/platform_icon", platform: @connection.platform %>
-        <div class="ml-4">
-          <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
-            <%= @connection.name %>
-          </h1>
-          <div class="mt-1 flex items-center">
-            <%= render "connections/status_badge", connection: @connection %>
-            <span class="ml-2 text-sm text-gray-500">
-              <%= @connection.platform.titleize %> &middot;
-              <%= @connection.posts_count %> posts
-            </span>
-          </div>
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <%= render "connections/platform_icon", platform: @connection.platform %>
+      <div>
+        <h1 class="text-xl font-bold text-terminal-bright uppercase tracking-wider">
+          &gt; <%= @connection.name %>_
+        </h1>
+        <div class="mt-1 flex items-center gap-3 text-sm">
+          <%= render "connections/status_badge", connection: @connection %>
+          <span class="text-terminal-dim">
+            <%= @connection.platform.upcase %> | <%= @connection.posts_count %> posts
+          </span>
         </div>
       </div>
     </div>
-    <div class="mt-4 flex space-x-3 md:mt-0">
-      <%= button_to sync_connection_path(@connection), method: :post, class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" do %>
-        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311h2.433a.75.75 0 000-1.5H3.989a.75.75 0 00-.75.75v4.242a.75.75 0 001.5 0v-2.43l.31.31a7 7 0 0011.712-3.138.75.75 0 00-1.449-.39zm1.23-3.723a.75.75 0 00.219-.53V2.929a.75.75 0 00-1.5 0V5.36l-.31-.31A7 7 0 003.239 8.188a.75.75 0 101.448.389A5.5 5.5 0 0113.89 6.11l.311.31h-2.432a.75.75 0 000 1.5h4.243a.75.75 0 00.53-.219z" clip-rule="evenodd" />
-        </svg>
-        Sync Now
+    <div class="flex gap-3">
+      <%= button_to sync_connection_path(@connection), method: :post, class: "btn-secondary" do %>
+        ~ SYNC NOW
       <% end %>
-      <%= link_to edit_connection_path(@connection), class: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" do %>
-        Edit
+      <%= link_to edit_connection_path(@connection), class: "btn-secondary" do %>
+        / EDIT
       <% end %>
     </div>
   </div>
 
   <% if @connection.last_synced_at.present? %>
-    <p class="text-sm text-gray-500">Last synced <%= time_ago_in_words(@connection.last_synced_at) %> ago</p>
+    <p class="text-sm text-terminal-dim">// Last synced <%= time_ago_in_words(@connection.last_synced_at) %> ago</p>
   <% end %>
 
   <% if @connection.error? && @connection.last_error.present? %>
-    <div class="rounded-md bg-red-50 p-4">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-          </svg>
-        </div>
-        <div class="ml-3">
-          <h3 class="text-sm font-medium text-red-800">Sync Error</h3>
-          <p class="mt-1 text-sm text-red-700"><%= @connection.last_error %></p>
-        </div>
-      </div>
+    <div class="flash-alert">
+      <strong>Sync Error:</strong> <%= @connection.last_error %>
     </div>
   <% end %>
 
   <!-- Posts List -->
-  <div class="bg-white shadow rounded-lg">
-    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-      <h2 class="text-lg font-medium text-gray-900">Recent Posts</h2>
-    </div>
-    <ul role="list" class="divide-y divide-gray-200">
+  <div class="card">
+    <div class="card-header">Recent Posts</div>
+    <div class="card-body p-0">
       <% if @posts.any? %>
-        <% @posts.each do |post| %>
-          <li class="px-4 py-4 sm:px-6">
-            <div class="flex items-center justify-between">
-              <div class="min-w-0 flex-1">
-                <p class="truncate text-sm font-medium text-gray-900">
-                  <% if post.url.present? %>
-                    <%= link_to post.title, post.url, target: "_blank", class: "hover:text-indigo-600" %>
-                  <% else %>
-                    <%= post.title %>
-                  <% end %>
-                </p>
-                <div class="mt-1 flex items-center text-sm text-gray-500">
-                  <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= platform_badge_class(post.platform) %>">
-                    <%= post.post_type.titleize %>
-                  </span>
-                  <span class="ml-2"><%= post.published_at.strftime("%b %d, %Y") %></span>
-                  <% if post.word_count.to_i > 0 %>
-                    <span class="ml-2"><%= number_with_delimiter(post.word_count) %> words</span>
-                  <% end %>
+        <ul class="ascii-list">
+          <% @posts.each do |post| %>
+            <li class="ascii-list-item">
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm text-terminal truncate">
+                    <% if post.url.present? %>
+                      <%= link_to post.title, post.url, target: "_blank", class: "hover:text-terminal-bright" %>
+                    <% else %>
+                      <%= post.title %>
+                    <% end %>
+                  </p>
+                  <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-terminal-dim">
+                    <span class="badge badge-<%= post.platform %>"><%= post.post_type.upcase %></span>
+                    <span><%= post.published_at.strftime("%Y-%m-%d") %></span>
+                    <% if post.word_count.to_i > 0 %>
+                      <span><%= number_with_delimiter(post.word_count) %> words</span>
+                    <% end %>
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        <% end %>
+            </li>
+          <% end %>
+        </ul>
       <% else %>
-        <li class="px-4 py-12 text-center">
-          <p class="text-sm text-gray-500">No posts synced yet.</p>
-        </li>
+        <div class="empty-state py-12">
+          <p class="text-sm text-terminal-dim">// No posts synced yet</p>
+        </div>
       <% end %>
-    </ul>
+    </div>
   </div>
 </div>

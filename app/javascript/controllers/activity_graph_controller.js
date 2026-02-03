@@ -24,8 +24,9 @@ export default class extends Controller {
 
     // Add month labels
     const monthLabels = document.createElement("div")
-    monthLabels.className = "flex mb-1 text-xs text-gray-400"
-    monthLabels.style.paddingLeft = "20px"
+    monthLabels.className = "flex mb-1 text-xs"
+    monthLabels.style.paddingLeft = "24px"
+    monthLabels.style.color = "#996633"
 
     let currentMonth = null
     weeks.forEach((week, index) => {
@@ -33,7 +34,7 @@ export default class extends Controller {
       const month = firstDay.toLocaleDateString('en-US', { month: 'short' })
       if (month !== currentMonth) {
         const label = document.createElement("span")
-        label.textContent = month
+        label.textContent = month.toUpperCase()
         label.style.marginLeft = index === 0 ? "0" : "auto"
         label.className = "mr-2"
         monthLabels.appendChild(label)
@@ -43,11 +44,13 @@ export default class extends Controller {
 
     // Day labels
     const dayLabels = document.createElement("div")
-    dayLabels.className = "flex flex-col gap-1 mr-1 text-xs text-gray-400"
+    dayLabels.className = "flex flex-col gap-1 mr-1 text-xs"
+    dayLabels.style.color = "#996633"
     const days = ["", "Mon", "", "Wed", "", "Fri", ""]
     days.forEach(day => {
       const label = document.createElement("div")
       label.className = "h-3 leading-3"
+      label.style.fontSize = "10px"
       label.textContent = day
       dayLabels.appendChild(label)
     })
@@ -70,8 +73,9 @@ export default class extends Controller {
 
       week.forEach(day => {
         const cell = document.createElement("div")
-        cell.className = `w-3 h-3 rounded-sm ${this.getLevelClass(day.level)}`
+        cell.className = `w-3 h-3 ${this.getLevelClass(day.level)}`
         cell.title = `${day.date}: ${day.count} post${day.count !== 1 ? 's' : ''}`
+        cell.style.cursor = "pointer"
         weekColumn.appendChild(cell)
       })
 
@@ -108,13 +112,14 @@ export default class extends Controller {
   }
 
   getLevelClass(level) {
+    // Orange-themed activity levels matching the ASCII terminal aesthetic
     switch (level) {
-      case 0: return "bg-gray-100"
-      case 1: return "bg-green-200"
-      case 2: return "bg-green-400"
-      case 3: return "bg-green-600"
-      case 4: return "bg-green-800"
-      default: return "bg-gray-100"
+      case 0: return "activity-level-0"
+      case 1: return "activity-level-1"
+      case 2: return "activity-level-2"
+      case 3: return "activity-level-3"
+      case 4: return "activity-level-4"
+      default: return "activity-level-0"
     }
   }
 }

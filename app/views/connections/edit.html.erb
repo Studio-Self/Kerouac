@@ -1,17 +1,15 @@
 <% content_for :title, "Edit Connection - Kerouac" %>
 
 <div class="mx-auto max-w-2xl">
-  <div class="md:flex md:items-center md:justify-between mb-8">
-    <div class="min-w-0 flex-1">
-      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
-        Edit Connection
-      </h1>
-      <p class="mt-1 text-sm text-gray-500">Update your <%= @connection.platform.titleize %> connection settings.</p>
-    </div>
+  <div class="mb-8">
+    <h1 class="text-xl font-bold text-terminal-bright uppercase tracking-wider">
+      &gt; Edit Connection_
+    </h1>
+    <p class="mt-1 text-sm text-terminal-dim">// Update your <%= @connection.platform.upcase %> connection settings</p>
   </div>
 
-  <div class="bg-white shadow rounded-lg">
-    <div class="px-4 py-5 sm:p-6">
+  <div class="card">
+    <div class="card-body">
       <%= render "form", connection: @connection %>
     </div>
   </div>
