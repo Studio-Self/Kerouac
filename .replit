@@ -38,3 +38,10 @@ externalPort = 80
 deploymentTarget = "autoscale"
 run = ["bash", "-c", "export LIBRARY_PATH='/nix/store/a19xns361xbqf5w3jcg67knvlbhmwdc9-libyaml-0.2.5/lib' && export C_INCLUDE_PATH='/nix/store/hdr7i632ygwwbd9mdcbbwbkmdgmkas0y-libyaml-0.2.5-dev/include' && RAILS_ENV=production bin/rails db:migrate && RAILS_ENV=production bin/rails server -b 0.0.0.0 -p 5000"]
 build = ["bash", "-c", "export LIBRARY_PATH='/nix/store/a19xns361xbqf5w3jcg67knvlbhmwdc9-libyaml-0.2.5/lib' && export C_INCLUDE_PATH='/nix/store/hdr7i632ygwwbd9mdcbbwbkmdgmkas0y-libyaml-0.2.5-dev/include' && bundle install && yarn install && yarn build && yarn build:css && bin/rails assets:precompile"]
+
+[userenv]
+
+[userenv.shared]
+ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY = "pmB54V9PJVOEe6Byx5LooGuANW8XTWOz"
+ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY = "TMKaRBfj4TC7tWPaY5fkzGUbyoGpcGE4"
+ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT = "dwDurQ1czigEhom2hUnRZEHpwTDGv3Ty"
