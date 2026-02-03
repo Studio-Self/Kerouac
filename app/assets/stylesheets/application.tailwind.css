@@ -186,7 +186,7 @@ body {
   .btn-primary {
     @apply inline-flex items-center px-4 py-2 text-sm font-medium;
     background-color: #ff6600;
-    color: #0a0a0a;
+    color: #000000 !important;
     border: 1px solid #ff6600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -196,16 +196,17 @@ body {
   .btn-primary:hover {
     background-color: #ff8833;
     border-color: #ff8833;
+    color: #000000 !important;
   }
 
   .btn-primary::before {
     content: '[ ';
-    color: #0a0a0a;
+    color: #000000 !important;
   }
 
   .btn-primary::after {
     content: ' ]';
-    color: #0a0a0a;
+    color: #000000 !important;
   }
 
   .btn-secondary {
