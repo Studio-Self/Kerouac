@@ -1,0 +1,21 @@
+<%
+  bg_class = case platform.to_s
+  when "substack" then "bg-orange-100"
+  when "ghost" then "bg-purple-100"
+  when "medium" then "bg-gray-100"
+  else "bg-indigo-100"
+  end
+
+  text_class = case platform.to_s
+  when "substack" then "text-orange-600"
+  when "ghost" then "text-purple-600"
+  when "medium" then "text-gray-600"
+  else "text-indigo-600"
+  end
+
+  letter = platform.to_s[0].upcase
+%>
+
+<div class="h-10 w-10 rounded-full <%= bg_class %> flex items-center justify-center flex-shrink-0">
+  <span class="<%= text_class %> font-bold text-lg"><%= letter %></span>
+</div>

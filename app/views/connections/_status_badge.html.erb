@@ -1,0 +1,18 @@
+<%
+  badge_class = case connection.status.to_s
+  when "active"
+    "bg-green-50 text-green-700 ring-green-600/20"
+  when "pending"
+    "bg-yellow-50 text-yellow-700 ring-yellow-600/20"
+  when "error"
+    "bg-red-50 text-red-700 ring-red-600/20"
+  when "disconnected"
+    "bg-gray-50 text-gray-700 ring-gray-600/20"
+  else
+    "bg-gray-50 text-gray-700 ring-gray-600/20"
+  end
+%>
+
+<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset <%= badge_class %>">
+  <%= connection.status.titleize %>
+</span>
