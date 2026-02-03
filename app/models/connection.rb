@@ -17,6 +17,10 @@ class Connection < ApplicationRecord
   scope :by_platform, ->(platform) { where(platform: platform) }
   scope :syncable, -> { where(status: [:pending, :active]) }
 
+  def syncable?
+    pending? || active?
+  end
+
   def sync!
     service_class = sync_service_class
     return unless service_class
