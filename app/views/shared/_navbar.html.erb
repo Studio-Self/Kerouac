@@ -1,42 +1,45 @@
-<nav class="bg-white shadow-sm border-b border-gray-200">
+<nav class="border-b border-terminal-dim bg-terminal">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex h-16 justify-between">
-      <div class="flex">
-        <div class="flex flex-shrink-0 items-center">
-          <%= link_to dashboard_path, class: "flex items-center" do %>
-            <span class="text-2xl font-bold text-indigo-600">Kerouac</span>
+    <div class="flex h-14 justify-between items-center">
+      <!-- Logo and Nav Links -->
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <%= link_to dashboard_path, class: "flex items-center hover:no-underline" do %>
+            <span class="text-xl font-bold text-terminal-bright">+--[</span>
+            <span class="text-xl font-bold text-terminal mx-1">KEROUAC</span>
+            <span class="text-xl font-bold text-terminal-bright">]--+</span>
           <% end %>
         </div>
-        <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+        <div class="hidden sm:ml-8 sm:flex sm:space-x-4">
           <%= link_to "Dashboard", dashboard_path,
-              class: "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium #{current_page?(dashboard_path) ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'}" %>
+              class: "nav-link #{current_page?(dashboard_path) ? 'nav-link-active' : ''}" %>
           <%= link_to "Connections", connections_path,
-              class: "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium #{request.path.start_with?('/connections') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'}" %>
+              class: "nav-link #{request.path.start_with?('/connections') ? 'nav-link-active' : ''}" %>
         </div>
       </div>
 
-      <div class="hidden sm:ml-6 sm:flex sm:items-center">
-        <div class="relative ml-3" data-controller="dropdown">
+      <!-- User Menu -->
+      <div class="hidden sm:flex sm:items-center">
+        <div class="relative" data-controller="dropdown">
           <button type="button"
-                  class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  class="flex items-center px-3 py-1 border border-terminal-dim text-terminal text-sm hover:border-terminal transition-colors"
                   data-action="click->dropdown#toggle"
                   data-dropdown-target="button">
-            <span class="sr-only">Open user menu</span>
-            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
-              <span class="text-sm font-medium text-indigo-600">
-                <%= current_user.email[0].upcase %>
-              </span>
-            </div>
+            <span class="mr-2">&lt;</span>
+            <span><%= current_user.email.split('@').first %></span>
+            <span class="ml-2">&gt;</span>
           </button>
 
-          <div class="hidden absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          <div class="hidden absolute right-0 z-10 mt-1 w-48 dropdown-menu"
                data-dropdown-target="menu">
-            <div class="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-              <%= current_user.email %>
+            <div class="px-3 py-2 text-xs text-terminal-dim border-b border-terminal-dim">
+              > <%= current_user.email %>
             </div>
-            <%= link_to "Sign out", destroy_user_session_path,
+            <%= link_to destroy_user_session_path,
                 data: { turbo_method: :delete },
-                class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                class: "dropdown-item" do %>
+              [ SIGN OUT ]
+            <% end %>
           </div>
         </div>
       </div>
@@ -44,44 +47,31 @@
       <!-- Mobile menu button -->
       <div class="flex items-center sm:hidden">
         <button type="button"
-                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                class="p-2 text-terminal border border-terminal-dim hover:border-terminal"
                 data-controller="mobile-menu"
                 data-action="click->mobile-menu#toggle">
           <span class="sr-only">Open main menu</span>
-          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-          </svg>
+          <span class="text-lg">=</span>
         </button>
       </div>
     </div>
   </div>
 
   <!-- Mobile menu -->
-  <div class="hidden sm:hidden" id="mobile-menu">
-    <div class="space-y-1 pb-3 pt-2">
+  <div class="hidden sm:hidden border-t border-terminal-dim" id="mobile-menu">
+    <div class="py-2">
       <%= link_to "Dashboard", dashboard_path,
-          class: "block border-l-4 py-2 pl-3 pr-4 text-base font-medium #{current_page?(dashboard_path) ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'}" %>
+          class: "block px-4 py-2 text-sm #{current_page?(dashboard_path) ? 'text-terminal border-l-2 border-terminal' : 'text-terminal-dim border-l-2 border-transparent'} hover:text-terminal" %>
       <%= link_to "Connections", connections_path,
-          class: "block border-l-4 py-2 pl-3 pr-4 text-base font-medium #{request.path.start_with?('/connections') ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-transparent text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700'}" %>
+          class: "block px-4 py-2 text-sm #{request.path.start_with?('/connections') ? 'text-terminal border-l-2 border-terminal' : 'text-terminal-dim border-l-2 border-transparent'} hover:text-terminal" %>
     </div>
-    <div class="border-t border-gray-200 pb-3 pt-4">
-      <div class="flex items-center px-4">
-        <div class="flex-shrink-0">
-          <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-            <span class="text-sm font-medium text-indigo-600">
-              <%= current_user.email[0].upcase %>
-            </span>
-          </div>
-        </div>
-        <div class="ml-3">
-          <div class="text-sm font-medium text-gray-500"><%= current_user.email %></div>
-        </div>
+    <div class="border-t border-terminal-dim py-2">
+      <div class="px-4 py-2 text-xs text-terminal-dim">
+        > <%= current_user.email %>
       </div>
-      <div class="mt-3 space-y-1">
-        <%= link_to "Sign out", destroy_user_session_path,
-            data: { turbo_method: :delete },
-            class: "block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800" %>
-      </div>
+      <%= link_to "[ SIGN OUT ]", destroy_user_session_path,
+          data: { turbo_method: :delete },
+          class: "block px-4 py-2 text-sm text-terminal hover:text-terminal-bright" %>
     </div>
   </div>
 </nav>

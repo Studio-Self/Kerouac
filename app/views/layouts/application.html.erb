@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html class="h-full bg-gray-50">
+<html class="h-full">
   <head>
     <title><%= content_for(:title) || "Kerouac" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Kerouac">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a0a0a">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -19,17 +20,26 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="h-full">
+  <body class="h-full bg-terminal">
     <% if user_signed_in? %>
       <div class="min-h-full">
         <%= render "shared/navbar" %>
 
-        <main class="py-10">
+        <main class="py-8">
           <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <%= render "shared/flash" %>
             <%= yield %>
           </div>
         </main>
+
+        <!-- ASCII Footer -->
+        <footer class="border-t border-terminal-dim py-4 mt-8">
+          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-xs text-terminal-dim">
+              +--[ KEROUAC v1.0 ]--[ Writing Activity Tracker ]--+
+            </p>
+          </div>
+        </footer>
       </div>
     <% else %>
       <div class="min-h-full flex flex-col justify-center">

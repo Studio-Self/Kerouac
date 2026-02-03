@@ -1,78 +1,72 @@
 <% content_for :title, "New Connection - Kerouac" %>
 
 <div class="mx-auto max-w-2xl">
-  <div class="md:flex md:items-center md:justify-between mb-8">
-    <div class="min-w-0 flex-1">
-      <h1 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
-        Add Connection
-      </h1>
-      <p class="mt-1 text-sm text-gray-500">Connect a writing platform to track your activity.</p>
-    </div>
+  <div class="mb-8">
+    <h1 class="text-xl font-bold text-terminal-bright uppercase tracking-wider">
+      &gt; Add Connection_
+    </h1>
+    <p class="mt-1 text-sm text-terminal-dim">// Connect a writing platform to track your activity</p>
   </div>
 
-  <div class="bg-white shadow rounded-lg">
-    <div class="px-4 py-5 sm:p-6">
+  <div class="card">
+    <div class="card-body">
       <%= render "form", connection: @connection %>
     </div>
   </div>
 
   <!-- Platform Help -->
-  <div class="mt-8 space-y-6">
-    <h2 class="text-lg font-medium text-gray-900">Supported Platforms</h2>
+  <div class="mt-8 space-y-4">
+    <h2 class="text-sm font-bold text-terminal-bright uppercase tracking-wider">
+      [ Supported Platforms ]
+    </h2>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
       <!-- Substack -->
-      <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm">
-        <div class="flex items-center space-x-3">
-          <div class="flex-shrink-0">
-            <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
-              <span class="text-orange-600 font-bold text-lg">S</span>
+      <div class="card">
+        <div class="card-body">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="platform-icon platform-icon-substack">S</div>
+            <div>
+              <p class="text-sm font-medium text-terminal">Substack</p>
+              <p class="text-xs text-terminal-dim">RSS-based sync</p>
             </div>
           </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-sm font-medium text-gray-900">Substack</p>
-            <p class="truncate text-sm text-gray-500">RSS-based sync</p>
-          </div>
+          <p class="text-xs text-terminal-dim">
+            // Enter your subdomain (e.g., "yourname" from yourname.substack.com)
+          </p>
         </div>
-        <p class="mt-3 text-sm text-gray-500">
-          Enter your Substack subdomain (e.g., "yourname" from yourname.substack.com)
-        </p>
       </div>
 
       <!-- Ghost -->
-      <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm">
-        <div class="flex items-center space-x-3">
-          <div class="flex-shrink-0">
-            <div class="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center">
-              <span class="text-purple-600 font-bold text-lg">G</span>
+      <div class="card">
+        <div class="card-body">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="platform-icon platform-icon-ghost">G</div>
+            <div>
+              <p class="text-sm font-medium text-terminal">Ghost</p>
+              <p class="text-xs text-terminal-dim">Admin API sync</p>
             </div>
           </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-sm font-medium text-gray-900">Ghost</p>
-            <p class="truncate text-sm text-gray-500">Admin API sync</p>
-          </div>
+          <p class="text-xs text-terminal-dim">
+            // Requires Admin API key from your Ghost settings
+          </p>
         </div>
-        <p class="mt-3 text-sm text-gray-500">
-          Requires Admin API key from your Ghost settings.
-        </p>
       </div>
 
       <!-- Medium -->
-      <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm">
-        <div class="flex items-center space-x-3">
-          <div class="flex-shrink-0">
-            <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
-              <span class="text-gray-600 font-bold text-lg">M</span>
+      <div class="card">
+        <div class="card-body">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="platform-icon platform-icon-medium">M</div>
+            <div>
+              <p class="text-sm font-medium text-terminal">Medium</p>
+              <p class="text-xs text-terminal-dim">RSS-based sync</p>
             </div>
           </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-sm font-medium text-gray-900">Medium</p>
-            <p class="truncate text-sm text-gray-500">RSS-based sync</p>
-          </div>
+          <p class="text-xs text-terminal-dim">
+            // Enter your Medium username (with or without @)
+          </p>
         </div>
-        <p class="mt-3 text-sm text-gray-500">
-          Enter your Medium username (with or without @).
-        </p>
       </div>
     </div>
   </div>
