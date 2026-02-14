@@ -39,7 +39,7 @@ class GhostSyncService < BaseSyncService
     payload = { iat: iat, exp: exp, aud: "/admin/" }
 
     # Decode hex secret
-    decoded_secret = [secret].pack("H*")
+    decoded_secret = [ secret ].pack("H*")
 
     JWT.encode(payload, decoded_secret, "HS256", header)
   end

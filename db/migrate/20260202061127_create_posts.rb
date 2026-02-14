@@ -14,10 +14,10 @@ class CreatePosts < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :posts, [:connection_id, :external_id], unique: true
+    add_index :posts, [ :connection_id, :external_id ], unique: true
     add_index :posts, :platform
     add_index :posts, :published_at
     add_index :posts, :post_type
-    add_index :posts, [:user_id, :published_at]
+    add_index :posts, [ :user_id, :published_at ]
   end
 end
