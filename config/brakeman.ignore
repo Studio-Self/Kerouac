@@ -1,0 +1,8 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "715ee6d743a8af33c7b930d728708ce19c765fb40e2ad9d2b974db04d92dc7d1",
+      "note": "Ruby 3.2.2 deprecation notice tracked separately; prevent CI failures until runtime upgrade is scheduled."
+    }
+  ]
+}

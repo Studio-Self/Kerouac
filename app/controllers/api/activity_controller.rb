@@ -5,7 +5,7 @@ module Api
 
     def index
       days = params[:days]&.to_i || 365
-      days = [days, 365].min # Cap at 365 days
+      days = [ days, 365 ].min # Cap at 365 days
 
       streak_calculator = StreakCalculatorService.new(current_user)
 
