@@ -52,7 +52,7 @@
     <div class="card-body" data-controller="activity-graph" data-activity-graph-data-value="<%= @activity_data.to_json %>">
       <div class="mb-4 flex items-center justify-end gap-3">
         <span class="text-xs text-terminal-dim">PNG 1200x675</span>
-        <button type="button" class="btn-secondary text-xs cursor-pointer" data-action="activity-graph#exportTwitterImage">
+        <button id="export-twitter-image" type="button" class="btn-secondary text-xs cursor-pointer">
           EXPORT FOR TWITTER
         </button>
       </div>
@@ -161,3 +161,231 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const button = document.getElementById("export-twitter-image")
+    if (!button || button.dataset.bound === "true") return
+    button.dataset.bound = "true"
+
+    button.addEventListener("click", () => {
+      const originalText = button.textContent
+      button.disabled = true
+      button.textContent = "RENDERING..."
+
+      try {
+        const container = button.closest("[data-activity-graph-data-value]")
+        const raw = container?.dataset?.activityGraphDataValue || "[]"
+        const data = JSON.parse(raw).sort((a, b) => a.date.localeCompare(b.date))
+        if (!data.length) return
+
+        const canvas = document.createElement("canvas")
+        const width = 1200
+        const height = 675
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext("2d")
+        if (!ctx) return
+
+        const parseDate = (value) => {
+          const [year, month, day] = value.split("-").map(Number)
+          return new Date(year, month - 1, day)
+        }
+        const formatDate = (value) => parseDate(value).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+        const groupByWeeks = (days) => {
+          const weeks = []
+          let current = []
+          days.forEach((day, index) => {
+            const dayOfWeek = parseDate(day.date).getDay()
+            if (dayOfWeek === 0 && current.length > 0) {
+              weeks.push(current)
+              current = []
+            }
+            current.push(day)
+            if (index === days.length - 1 && current.length > 0) {
+              weeks.push(current)
+            }
+          })
+          return weeks
+        }
+        const levelColor = (level) => {
+          switch (level) {
+            case 0: return "#1b2533"
+            case 1: return "#1f4c85"
+            case 2: return "#2e72af"
+            case 3: return "#3d9fcb"
+            case 4: return "#72e1ff"
+            default: return "#1b2533"
+          }
+        }
+        const roundedRect = (x, y, w, h, radius, fill, stroke = null, line = 1) => {
+          const r = Math.min(radius, w / 2, h / 2)
+          ctx.beginPath()
+          ctx.moveTo(x + r, y)
+          ctx.lineTo(x + w - r, y)
+          ctx.quadraticCurveTo(x + w, y, x + w, y + r)
+          ctx.lineTo(x + w, y + h - r)
+          ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+          ctx.lineTo(x + r, y + h)
+          ctx.quadraticCurveTo(x, y + h, x, y + h - r)
+          ctx.lineTo(x, y + r)
+          ctx.quadraticCurveTo(x, y, x + r, y)
+          ctx.closePath()
+          if (fill) {
+            ctx.fillStyle = fill
+            ctx.fill()
+          }
+          if (stroke && line > 0) {
+            ctx.strokeStyle = stroke
+            ctx.lineWidth = line
+            ctx.stroke()
+          }
+        }
+
+        const totalPosts = data.reduce((sum, day) => sum + day.count, 0)
+        const activeDays = data.filter((day) => day.count > 0).length
+        const activityRate = Math.round((activeDays / data.length) * 100)
+        const postsLast30 = data.slice(-30).reduce((sum, day) => sum + day.count, 0)
+        const bestDay = data.reduce((best, day) => day.count > best.count ? day : best, data[0])
+        const currentStreak = (() => {
+          let index = data.length - 1
+          if (data[index].count === 0) index -= 1
+          let streak = 0
+          while (index >= 0 && data[index].count > 0) {
+            streak += 1
+            index -= 1
+          }
+          return streak
+        })()
+        const bestStreak = (() => {
+          let longest = 0
+          let current = 0
+          data.forEach((day) => {
+            if (day.count > 0) {
+              current += 1
+              longest = Math.max(longest, current)
+            } else {
+              current = 0
+            }
+          })
+          return longest
+        })()
+
+        const bg = ctx.createLinearGradient(0, 0, width, height)
+        bg.addColorStop(0, "#02050a")
+        bg.addColorStop(0.55, "#081323")
+        bg.addColorStop(1, "#0d1b2d")
+        ctx.fillStyle = bg
+        ctx.fillRect(0, 0, width, height)
+
+        roundedRect(30, 30, width - 60, height - 60, 28, "rgba(10, 15, 22, 0.86)", "rgba(94, 120, 152, 0.5)", 2)
+        roundedRect(54, 54, 336, height - 108, 22, "rgba(16, 24, 36, 0.95)", "rgba(94, 120, 152, 0.35)", 1)
+        roundedRect(408, 54, width - 462, height - 108, 22, "rgba(13, 20, 31, 0.95)", "rgba(94, 120, 152, 0.35)", 1)
+
+        ctx.fillStyle = "#74d6ff"
+        ctx.font = "600 17px 'SF Mono', Menlo, Monaco, monospace"
+        ctx.fillText("KEROUAC", 78, 88)
+        ctx.fillStyle = "#f5f8ff"
+        ctx.font = "700 45px 'SF Pro Display', 'Segoe UI', sans-serif"
+        ctx.fillText("Writing", 78, 140)
+        ctx.fillText("Activity", 78, 190)
+        ctx.fillStyle = "#9fb6d6"
+        ctx.font = "500 17px 'SF Pro Text', 'Segoe UI', sans-serif"
+        ctx.fillText(`${formatDate(data[0].date)} - ${formatDate(data[data.length - 1].date)}`, 78, 222)
+
+        const statRows = [
+          { label: "TOTAL POSTS", value: `${totalPosts}` },
+          { label: "ACTIVE DAYS", value: `${activeDays} (${activityRate}%)` },
+          { label: "CURRENT STREAK", value: `${currentStreak} days` },
+          { label: "BEST STREAK", value: `${bestStreak} days` }
+        ]
+        statRows.forEach((row, index) => {
+          const y = 248 + index * 80
+          roundedRect(74, y, 296, 68, 12, "rgba(25, 37, 54, 0.95)", "rgba(111, 146, 189, 0.42)", 1)
+          ctx.fillStyle = "#8eb1dc"
+          ctx.font = "600 11px 'SF Mono', Menlo, Monaco, monospace"
+          ctx.fillText(row.label, 88, y + 22)
+          ctx.fillStyle = "#f5f8ff"
+          ctx.font = "700 24px 'SF Pro Display', 'Segoe UI', sans-serif"
+          ctx.fillText(row.value, 88, y + 50)
+        })
+
+        ctx.fillStyle = "#74d6ff"
+        ctx.font = "600 14px 'SF Mono', Menlo, Monaco, monospace"
+        ctx.fillText("LAST 30 DAYS", 78, 584)
+        ctx.fillStyle = "#f5f8ff"
+        ctx.font = "700 30px 'SF Pro Display', 'Segoe UI', sans-serif"
+        ctx.fillText(`${postsLast30} posts`, 78, 620)
+        ctx.fillStyle = "#9fb6d6"
+        ctx.font = "500 13px 'SF Pro Text', 'Segoe UI', sans-serif"
+        ctx.fillText(`Best day: ${bestDay.count} on ${formatDate(bestDay.date)}`, 78, 644)
+
+        ctx.fillStyle = "#f5f8ff"
+        ctx.font = "700 28px 'SF Pro Display', 'Segoe UI', sans-serif"
+        ctx.fillText("365-Day Heatmap", 432, 94)
+
+        const weeks = groupByWeeks(data)
+        const columns = Math.max(weeks.length, 1)
+        const rows = 7
+        const xGap = 3
+        const yGap = 3
+        const chartX = 476
+        const chartY = 150
+        const chartW = width - 520
+        const chartH = height - 230
+        const cellSize = Math.max(7, Math.floor(Math.min((chartW - xGap * (columns - 1)) / columns, (chartH - yGap * (rows - 1)) / rows)))
+        const gridWidth = columns * cellSize + xGap * (columns - 1)
+        const gridHeight = rows * cellSize + yGap * (rows - 1)
+        const gridX = chartX + Math.floor((chartW - gridWidth) / 2)
+        const gridY = chartY + Math.floor((chartH - gridHeight) / 2)
+
+        ;[["Mon", 1], ["Wed", 3], ["Fri", 5]].forEach(([label, row]) => {
+          ctx.fillStyle = "#8ca6c8"
+          ctx.font = "500 13px 'SF Mono', Menlo, Monaco, monospace"
+          ctx.fillText(label, 426, gridY + row * (cellSize + yGap) + Math.round(cellSize * 0.8))
+        })
+
+        let month = null
+        let lastMonthX = -Infinity
+        weeks.forEach((week, index) => {
+          const monthLabel = parseDate(week[0].date).toLocaleDateString("en-US", { month: "short" }).toUpperCase()
+          const x = gridX + index * (cellSize + xGap)
+          if (monthLabel !== month && x - lastMonthX > 32) {
+            ctx.fillStyle = "#8ca6c8"
+            ctx.font = "500 12px 'SF Mono', Menlo, Monaco, monospace"
+            ctx.fillText(monthLabel, x, gridY - 12)
+            month = monthLabel
+            lastMonthX = x
+          }
+        })
+
+        const latestDate = data[data.length - 1].date
+        weeks.forEach((week, weekIndex) => {
+          const firstDayOffset = parseDate(week[0].date).getDay()
+          week.forEach((day, dayIndex) => {
+            const x = gridX + weekIndex * (cellSize + xGap)
+            const y = gridY + (firstDayOffset + dayIndex) * (cellSize + yGap)
+            const stroke = day.date === latestDate ? "#ffe99f" : null
+            roundedRect(x, y, cellSize, cellSize, 3, levelColor(day.level), stroke, stroke ? 2 : 0)
+          })
+        })
+
+        ctx.fillStyle = "#8ca6c8"
+        ctx.font = "500 13px 'SF Mono', Menlo, Monaco, monospace"
+        ctx.textAlign = "right"
+        ctx.fillText("Exported for Twitter - 1200x675", width - 54, height - 46)
+        ctx.textAlign = "left"
+
+        const link = document.createElement("a")
+        link.href = canvas.toDataURL("image/png")
+        link.download = `kerouac-twitter-card-${data[data.length - 1].date}.png`
+        link.click()
+      } catch (error) {
+        console.error("Twitter export failed", error)
+      } finally {
+        button.disabled = false
+        button.textContent = originalText
+      }
+    })
+  })
+</script>
