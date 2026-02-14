@@ -1,5 +1,5 @@
 class ConnectionsController < ApplicationController
-  before_action :set_connection, only: [:show, :edit, :update, :destroy, :sync]
+  before_action :set_connection, only: [ :show, :edit, :update, :destroy, :sync ]
 
   def index
     @connections = current_user.connections.order(created_at: :desc)

@@ -50,6 +50,12 @@
   <div class="card">
     <div class="card-header">Activity Graph</div>
     <div class="card-body" data-controller="activity-graph" data-activity-graph-data-value="<%= @activity_data.to_json %>">
+      <div class="mb-4 flex items-center justify-end gap-3">
+        <span class="text-xs text-terminal-dim">PNG 1200x675</span>
+        <button type="button" class="btn-secondary text-xs cursor-pointer" data-action="activity-graph#exportTwitterImage">
+          EXPORT FOR TWITTER
+        </button>
+      </div>
       <div class="overflow-x-auto pb-2">
         <div data-activity-graph-target="graph" class="activity-graph"></div>
       </div>

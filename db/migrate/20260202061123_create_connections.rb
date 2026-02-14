@@ -14,7 +14,7 @@ class CreateConnections < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :connections, [:user_id, :platform, :identifier], unique: true
+    add_index :connections, [ :user_id, :platform, :identifier ], unique: true
     add_index :connections, :platform
     add_index :connections, :status
   end

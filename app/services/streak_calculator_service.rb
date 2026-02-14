@@ -22,7 +22,7 @@ class StreakCalculatorService
     dates.each_cons(2) do |prev_date, curr_date|
       if (curr_date - prev_date).to_i == 1
         current += 1
-        max_streak = [max_streak, current].max
+        max_streak = [ max_streak, current ].max
       else
         current = 1
       end

@@ -10,12 +10,12 @@ class Connection < ApplicationRecord
   validates :name, presence: true
   validates :identifier, presence: true
   validates :platform, presence: true
-  validates :identifier, uniqueness: { scope: [:user_id, :platform], message: "is already connected" }
+  validates :identifier, uniqueness: { scope: [ :user_id, :platform ], message: "is already connected" }
 
   before_validation :set_default_status, on: :create
 
   scope :by_platform, ->(platform) { where(platform: platform) }
-  scope :syncable, -> { where(status: [:pending, :active]) }
+  scope :syncable, -> { where(status: [ :pending, :active ]) }
 
   def syncable?
     pending? || active?
